@@ -13,9 +13,13 @@ De quais coisas você precisa para executar o software?
 Criar ambiente virtual
 ```
 python -m venv ambientevirtual
+```
 ativar ambiente vitual
+```
 .\ambientevirtual\Scripts\activate
+```
 Para desativar ambiente vitual caso necessário
+```
 deactivate
 ```
 ### 🔧 Instalação
