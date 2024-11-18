@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db_fonte:
+    image: postgres:16.2
+    container_name: db_fonte
+    environment:
+      POSTGRES_USER: delfo
+      POSTGRES_PASSWORD: teste123
+      POSTGRES_DB: fonte
+    volumes:
+      - ./db/fonte_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  db_alvo:
+    image: postgres:16.2
+    container_name: db_alvo
+    environment:
+      POSTGRES_USER: delfo
+      POSTGRES_PASSWORD: teste123
+      POSTGRES_DB: alvo
+    volumes:
+      - ./db/alvo_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db_fonte
+
+  etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: etl_container
+    command: [ "python", "app/etl_script.py" ]
+    depends_on:
+      - api
+      - db_alvo
