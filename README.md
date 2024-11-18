@@ -1,5 +1,5 @@
 ### 📋 Pré-requisitos
-De que coisas você precisa para executar o software?
+De quais coisas você precisa para executar o software?
 ```
 - **FastAPI** para expor dados de um banco de dados PostgreSQL (Fonte).
 - **PostgreSQL** para armazenar dados de entrada e saída.
