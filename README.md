@@ -38,7 +38,8 @@ Rodar a Api do banco fonte dentro da pasta app com comando "python app/main.py"
 ```
 Terceiro Parte 
 ```
-Rodas o script ETL caso não queria utilizar o dagster com comando "python app/etl_script.py", esse local é aonde vai ser realizado a chamada da Api do Banco fonte para alimentar o banco alvo.
+Rodas o script ETL caso não queria utilizar o dagster com comando "python app/etl_script.py", esse local é aonde vai ser realizado a
+chamada da Api do Banco fonte para alimentar o banco alvo.
 
 
 
