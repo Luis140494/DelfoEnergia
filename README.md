@@ -14,7 +14,7 @@ Criar ambiente virtual
 ```
 python -m venv ambientevirtual
 ```
-ativar ambiente vitual
+Ativar ambiente vitual
 ```
 .\ambientevirtual\Scripts\activate
 ```
