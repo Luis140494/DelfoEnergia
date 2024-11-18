@@ -5,6 +5,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import column
 
 from schemas.data_fonte_schema import DataFonteSchema
 from core.deps import get_session_Fonte
@@ -15,18 +16,24 @@ router = APIRouter()
 
 @router.get('/', response_model=List[DataFonteSchema])
 async def get_data(start: datetime, end: datetime, 
-                   variables: Optional[List[str]] = Query([]), #variables=power&variables=wind_speed&variables=ambient_temperature 
+                   variables: Optional[List[str]] = Query([]), #ambient_temperature,wind_speed,power
                    db: AsyncSession = Depends(get_session_Fonte)):
 
         async with db as session:
             try:
-                query = select(DataFonteModel).where(DataFonteModel.timestamp.between(start, end))
                 # Para cada variável solicitada, verifica se existe no objeto Data
                 # Retorna os dados filtrados, onde cada variável é um campo
                 if variables:
-                    columns = [getattr(DataFonteModel, var) for var in variables if hasattr(DataFonteModel, var)]
-                    query = query.with_only_columns(*columns)
-                    
+                    colunas_desejadas = variables[0].split(',')
+                    colunas_para_selecionar = [
+                                    getattr(DataFonteModel, coluna) 
+                                    for coluna in colunas_desejadas 
+                                    if hasattr(DataFonteModel, coluna)]
+        
+                    query = select(DataFonteModel).where(DataFonteModel.timestamp.between(start, end)).with_only_columns(*colunas_para_selecionar)
+                else:
+                    query = select(DataFonteModel).where(DataFonteModel.timestamp.between(start, end))  
+
                 result = await session.execute(query)
                 datas: List[DataFonteModel] = result.scalars().unique().all()
                 if datas: 

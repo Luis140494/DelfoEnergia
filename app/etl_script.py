@@ -14,7 +14,7 @@ async def fetch_data_from_api(start_date: date, end_date: date, variables: list[
         url_api = f"http://localhost:8000/api/v1/data/?start={start_date}T00:00:00.00&end={end_date}T23:59:59.00"
         list_variables = ''
         for var in variables:
-            list_variables = list_variables + '&variables=' + var
+            list_variables = list_variables + '&variables=' + f'"{var}"'
 
         url_api = url_api + list_variables
         url_api = url_api.replace(" ", "")
@@ -89,5 +89,5 @@ async def etl_pipeline(start_date: date, end_date: date, variables: list[str]):
 
 if __name__ == "__main__":
     start_date = date(2024, 11, 5)
-    end_date = date(2024, 11, 7)
+    end_date = date(2024, 11, 22)
     asyncio.run(etl_pipeline(start_date, end_date, ['wind_speed', 'power']))
