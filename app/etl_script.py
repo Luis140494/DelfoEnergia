@@ -7,21 +7,24 @@ from core.configs import settings
 from datetime import date
 from models.data_alvo_model import DataAlvoModel # Aqui você define o modelo SQLAlchemy
 from models.signal_alvo_model import SignalAlvoModel # Aqui você define o modelo SQLAlchemy
+import urllib.parse
 
 
 async def fetch_data_from_api(start_date: date, end_date: date, variables: list[str]):
+    
     try:
         url_api = f"http://localhost:8000/api/v1/data/?start={start_date}T00:00:00.00&end={end_date}T23:59:59.00"
-        list_variables = ''
-        for var in variables:
-            list_variables = list_variables + '&variables=' + f'"{var}"'
+        
+        param = {"variables": ",".join(variables)}
+        variables_params = urllib.parse.urlencode(param)
 
-        url_api = url_api + list_variables
+        url_api = url_api #+ '&' +variables_params
         url_api = url_api.replace(" ", "")
         print(url_api)
         async with httpx.AsyncClient() as client:
             response = await client.get(url_api)
             data = response.json()
+            print(data)
             return data
     except Exception as e:
         print(f"Erro ao decodificar a resposta JSON: {e}")
