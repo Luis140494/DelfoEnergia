@@ -21,44 +21,44 @@ async def get_data(start: datetime, end: datetime,
 
         async with db as session:
             try:
-                # Para cada variável solicitada, verifica se existe no objeto Data
-                # Retorna os dados filtrados, onde cada variável é um campo
-                if variables:
-                    allowed_variables = set(variables.split(","))
-                    print(f"Variáveis recebidas: {allowed_variables}")  # Para debug
+                query = select(DataFonteModel).where(DataFonteModel.timestamp.between(start, end))
+                result = await session.execute(query)
+                datas: List[DataFonteModel] = result.scalars().unique().all()
+                if datas:
+                    if variables:
+                        allowed_variables = set(variables.split(","))
+                        print(f"Variáveis recebidas: {allowed_variables}")  # Para debug
 
-                    columns = set(DataFonteModel.__table__.columns.keys())
-                    print(f"Colunas válidas no banco: {columns}")  # Para debug
+                        columns = set(DataFonteModel.__table__.columns.keys())
+                        print(f"Colunas válidas no banco: {columns}")  # Para debug
 
-                    invalid_columns = allowed_variables - columns
-                    if invalid_columns:
-                        raise HTTPException(status_code=400, detail=f"Colunas inválidas: {', '.join(invalid_columns)}")
+                        invalid_columns = allowed_variables - columns
+                        if invalid_columns:
+                            raise HTTPException(status_code=400, detail=f"Colunas inválidas: {', '.join(invalid_columns)}")
 
-                    # Adicionar filtros de variáveis na consulta
-                    selected_columns = []
-                    selected_columns.append(DataFonteModel.id)
-                    selected_columns.append(DataFonteModel.timestamp)
-                    if 'wind_speed' in allowed_variables:
-                        selected_columns.append(DataFonteModel.wind_speed)
-                    if 'power' in allowed_variables:
-                        selected_columns.append(DataFonteModel.power)
-                    if 'ambient_temperature' in allowed_variables:
-                        selected_columns.append(DataFonteModel.ambient_temperature)
+                        filtered_data = []
+                        for row in datas:
+                            data_row = {var: getattr(row, var) for var in variables if hasattr(row, var)}
+                            
+                            data_row["id"] = row.id
+                            data_row["timestamp"] = row.timestamp
 
-                    # Usar *args para passar as colunas selecionadas como argumentos separados
-                    query = select(DataFonteModel).with_only_columns(*selected_columns).where(DataFonteModel.timestamp.between(start, end))
-                    #query = query.with_only_columns([col for col in DataFonteModel.__table__.columns if col.name != 'power'])
-                    print(query)
-                    result = await session.execute(query)
-                    datas: List[DataFonteModel] = result.fetchall()
-                    print(datas)
-                else:
-                    query = select(DataFonteModel).where(DataFonteModel.timestamp.between(start, end))
-                    result = await session.execute(query)
-                    datas: List[DataFonteModel] = result.scalars().unique().all()
+                            # if 'wind_speed' in allowed_variables:
+                            #     data_row["wind_speed"] = row.wind_speed
 
-                if datas: 
-                    return datas    
+                            # if 'power' in allowed_variables:
+                            #     data_row["power"] = row.wind_speed
+
+                            # if 'ambient_temperature' in allowed_variables:
+                            #     data_row["ambient_temperature"] = row.wind_speed
+                            
+                            filtered_data.append(data_row)
+
+                        data_model_instances = [DataFonteModel(**entry) for entry in filtered_data]
+                        print(data_model_instances)
+                        return data_model_instances
+                    else:
+                       return datas     
                 else:
                     raise HTTPException(detail='Valores não encontradas.', status_code=status.HTTP_404_NOT_FOUND)
             except SQLAlchemyError as e:
