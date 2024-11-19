@@ -47,6 +47,14 @@ Rodas o script ETL caso não queira utilizar o dagster com comando "python app/e
 esse local é aonde vai ser realizado a chamada da Api do Banco fonte para alimentar o banco
 alvo.
 ```
+Quarto Parte Opcional
+```
+Agendamento e Execução: O dagster orquestrará o processo diariamente, extraindo, transformando e inserindo os dados no banco de dados.
+e caso queira modificar o tempo ao invés de diário para agora mudar dentro do arquivo "app/dagster_etl.py"
+cron_schedule="* * * * *" ou se quiser o tempo que quiser  cron_schedule="0 0 * * *" como esse caso que vira tempo diário
+E executar com o comando "python app/dagster_etl.py"
+```
+
 
 
 
