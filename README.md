@@ -27,10 +27,12 @@ instalar as bibliotecas junto ao python e fastApi
 ```
 pip install fastapi pyscopg2-binary sqlalchemy sqlmodel asyncpg uvicorn pytz passlib python-multipart pydantic-settings httpx pandas dagster dagit, dagster_postgres
 ```
-## ⚙️ Executar
+### ⚙️ Executar
 Primeira parte
 ```
 Criar dois banco de dados no PostgreSQL, um chamado Fonte e outro Alvo
+Por favor lembre-se de modificar a string de conexão no arquivo "app/core/configs.py", caso seu usuário e senha seja diferente.
+Exemplo: 'postgresql+asyncpg://delfo:teste123@localhost:5432/Fonte', usuario = delfo e senha = teste123
 Importante: Criar tabelas do banco alvo primeiro, pois o fonte além de criar a tabela vai inserir os
 registros em 1 em 1 minuto como foi solicitado 
 Criar tabela do banco de dados Alvo com o comando "python app/criar_tabela_alvo.py" 
