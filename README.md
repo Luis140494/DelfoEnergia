@@ -15,7 +15,7 @@ Por exemplo, data com hora inicial e data com hora final mais a varáiveis das t
 http://localhost:8000/api/v1/data/?start=2024-11-05T00:00:00.000000&end=2024-11-22T23:59:59.000000&variables=power
 
 Lembrando que as váriaveis para selecionar o campo, têm que ser assim "ambient_temperature,wind_speed,power", com a vírgula
-separando, ou seja, se quiser apenas o campo power e wind_speed, mandar assim "power,wind_speed"
+separando, ou seja, se quiser apenas os campos power e wind_speed, mandar assim "power,wind_speed"
 ```
 
 ### 🚀 Começando
