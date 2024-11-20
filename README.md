@@ -9,6 +9,12 @@ De quais coisas você precisa para executar o software?
 - **Docker** e **Docker Compose** para orquestrar os containers.
 ```
 
+URL da Api:
+```
+Por exemplo, data com hora inicial e data com hora final mais a varáiveis das tabelas caso precise
+http://localhost:8000/api/v1/data/?start=2024-11-05T00:00:00.000000&end=2024-11-22T23:59:59.000000&variables=power
+```
+
 ### 🚀 Começando
 Criar ambiente virtual
 ```
