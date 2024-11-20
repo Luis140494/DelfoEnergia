@@ -14,7 +14,7 @@ from models.data_fonte_model import DataFonteModel
 
 router = APIRouter()
 
-@router.get('/', response_model=List[DataFonteSchema])
+@router.get('/')
 async def get_data(start: datetime, end: datetime, 
                    variables: Optional[str] = None, #ambient_temperature,wind_speed,power
                    db: AsyncSession = Depends(get_session_Fonte)):
@@ -43,20 +43,20 @@ async def get_data(start: datetime, end: datetime,
                             data_row["id"] = row.id
                             data_row["timestamp"] = row.timestamp
 
-                            # if 'wind_speed' in allowed_variables:
-                            #     data_row["wind_speed"] = row.wind_speed
+                            if 'wind_speed' in allowed_variables:
+                                data_row["wind_speed"] = row.wind_speed
 
-                            # if 'power' in allowed_variables:
-                            #     data_row["power"] = row.wind_speed
+                            if 'power' in allowed_variables:
+                                data_row["power"] = row.wind_speed
 
-                            # if 'ambient_temperature' in allowed_variables:
-                            #     data_row["ambient_temperature"] = row.wind_speed
+                            if 'ambient_temperature' in allowed_variables:
+                                data_row["ambient_temperature"] = row.wind_speed
                             
                             filtered_data.append(data_row)
 
-                        data_model_instances = [DataFonteModel(**entry) for entry in filtered_data]
-                        print(data_model_instances)
-                        return data_model_instances
+                        #data_model_instances = [DataFonteModel(**entry) for entry in filtered_data]
+                        print(filtered_data)
+                        return filtered_data
                     else:
                        return datas     
                 else:
